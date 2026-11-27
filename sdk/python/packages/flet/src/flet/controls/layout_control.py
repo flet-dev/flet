@@ -272,6 +272,13 @@ class LayoutControl(Control):
     animated. If neither dimension is set, changes to the control's natural size are
     animated instead.
 
+    To collapse a :class:`~flet.Container`, keep its content mounted and animate
+    its height to zero. The content is laid out at each intermediate height.
+    Fixed-size children can overflow during the collapse. Set
+    :attr:`flet.Container.clip_behavior` to :attr:`flet.ClipBehavior.HARD_EDGE`
+    to hide paint outside the container. Children still need enough room to
+    satisfy their layout constraints.
+
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
@@ -323,15 +330,16 @@ class LayoutControl(Control):
     """
     Sampling interval in milliseconds for :attr:`on_size_change` event.
 
-    Setting to `0` calls :attr:`on_size_change` immediately
-    on every change.
+    Set to `0` to report every frame whose final size differs from the
+    previously reported size.
     """
 
     on_size_change: Optional[EventHandler[LayoutSizeChangeEvent["LayoutControl"]]] = (
         None
     )
     """
-    Called when the size of this control changes.
+    Called when the size of this control changes. If layout measures the
+    control more than once in a frame, the event reports its final size.
 
     :attr:`size_change_interval` defines how often this event is called.
     """

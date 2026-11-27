@@ -14,6 +14,7 @@ __all__ = [
     "ChartPointLine",
     "ChartPointShape",
     "ChartSquarePoint",
+    "GaugeTickPosition",
     "HorizontalAlignment",
 ]
 
@@ -353,6 +354,42 @@ class ChartEventType(Enum):
     screen.
     """
 
+    SECONDARY_TAP_DOWN = "secondaryTapDown"
+    """
+    When a secondary pointer, such as a right mouse button, that might cause a tap
+    has contacted the screen.
+    """
+
+    SECONDARY_TAP_UP = "secondaryTapUp"
+    """
+    When a secondary pointer that will trigger a tap has stopped contacting the
+    screen.
+    """
+
+    SECONDARY_TAP_CANCEL = "secondaryTapCancel"
+    """
+    When the secondary pointer that previously triggered a secondary tap-down will
+    not end up causing a tap.
+    """
+
+    SECONDARY_LONG_PRESS_START = "secondaryLongPressStart"
+    """
+    When a secondary pointer has remained in contact with the screen at the same
+    location for a long period of time.
+    """
+
+    SECONDARY_LONG_PRESS_MOVE_UPDATE = "secondaryLongPressMoveUpdate"
+    """
+    When a secondary pointer is moving after being held in contact at the same
+    location for a long period of time.
+    """
+
+    SECONDARY_LONG_PRESS_END = "secondaryLongPressEnd"
+    """
+    When a secondary pointer stops contacting the screen after a long press
+    gesture was detected.
+    """
+
     UNDEFINED = "undefined"
     """
     An undefined event.
@@ -473,6 +510,31 @@ class ChartErrorRange:
             lower_by=lower_by if lower_by is not None else self.lower_by,
             upper_by=upper_by if upper_by is not None else self.upper_by,
         )
+
+
+class GaugeTickPosition(Enum):
+    """
+    Where ticks and markers sit relative to the rings of a
+    :class:`~flet_charts.GaugeChart`.
+    """
+
+    OUTER = "outer"
+    """
+    Outside the outermost ring.
+
+    The rings shrink to leave room for the ticks, their labels and the markers.
+    """
+
+    INNER = "inner"
+    """
+    Inside the innermost ring, toward the center of the gauge.
+    """
+
+    CENTER = "center"
+    """
+    Halfway between the outer edge of the outermost ring and the inner edge of the
+    innermost ring.
+    """
 
 
 class HorizontalAlignment(Enum):

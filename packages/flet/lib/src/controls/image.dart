@@ -7,6 +7,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 import '../utils/numbers.dart';
+import '../widgets/animated_control_size.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -93,9 +94,18 @@ class ImageControl extends StatelessWidget {
       errorCtrl: errorContent,
       fadeConfig: fadeConfig.enabled ? fadeConfig : null,
     );
+    final sizeAnimation = control.getAnimation("animate_size");
     return LayoutControl(
         control: control,
-        child: _clipCorners(image, control.getBorderRadius("border_radius")));
+        child: AnimatedControlSize(
+          width: sizeAnimation == null ? null : width,
+          height: sizeAnimation == null ? null : height,
+          animation: sizeAnimation,
+          onEnd: control.hasEventHandler("animation_end")
+              ? () => control.triggerEvent("animation_end", "size")
+              : null,
+          child: _clipCorners(image, control.getBorderRadius("border_radius")),
+        ));
   }
 
   Widget _clipCorners(Widget image, BorderRadius? borderRadius) {

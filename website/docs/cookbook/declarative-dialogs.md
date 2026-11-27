@@ -111,6 +111,41 @@ ft.run(lambda page: page.render(App))
 This pattern works well with `asyncio` and other async APIs in Flet apps. For more
 background, see [Async apps](async-apps.md).
 
+## Building a dialog in a helper function
+
+Pass [`ft.use_dialog()`](../types/usedialog.md) the dialog control itself. To keep a long
+dialog out of the component body, build it in a plain function, not in an
+[`@ft.component`](../types/component.md): a component call returns a component, not a
+dialog, and `use_dialog()` raises a `TypeError` for it.
+
+```python
+def delete_dialog(name: str, on_confirm, on_cancel) -> ft.AlertDialog:
+    return ft.AlertDialog(
+        title=ft.Text(f"Delete {name}?"),
+        actions=[
+            ft.TextButton("Cancel", on_click=on_cancel),
+            ft.FilledButton("Delete", on_click=on_confirm),
+        ],
+        on_dismiss=on_cancel,
+    )
+
+
+@ft.component
+def FileRow(name: str):
+    confirming, set_confirming = ft.use_state(False)
+
+    ft.use_dialog(
+        delete_dialog(
+            name,
+            on_confirm=lambda: set_confirming(False),
+            on_cancel=lambda: set_confirming(False),
+        )
+        if confirming
+        else None
+    )
+    return ft.TextButton(f"Delete {name}", on_click=lambda: set_confirming(True))
+```
+
 ## Chaining dialogs
 
 You can call [`ft.use_dialog()`](../types/usedialog.md) more than once in the same component. That

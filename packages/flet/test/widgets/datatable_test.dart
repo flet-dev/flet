@@ -1,0 +1,858 @@
+import 'dart:collection';
+
+import 'package:flet/src/controls/control_widget.dart';
+import 'package:flet/src/controls/datatable.dart';
+import 'package:flet/src/flet_backend.dart';
+import 'package:flet/src/flet_core_extension.dart';
+import 'package:flet/src/models/control.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
+
+class _Backend extends FletBackend {
+  _Backend()
+      : super(
+            pageUri: Uri.parse('http://localhost'),
+            assetsDir: '',
+            extensions: [FletCoreExtension()],
+            multiView: false);
+
+  final events = <(int, String, dynamic)>[];
+
+  @override
+  void triggerControlEventById(int controlId, String eventName,
+      [dynamic eventData]) {
+    events.add((controlId, eventName, eventData));
+  }
+}
+
+class _Table {
+  _Table(this.backend, this.control);
+
+  final _Backend backend;
+  final Control control;
+
+  List<Control> get rows => control.children('rows');
+}
+
+Future<_Table> _pumpTable(WidgetTester tester, Map<String, dynamic> props,
+    {int rows = 3,
+    String Function(int row, int column)? text,
+    Object? Function(int row, int column)? content,
+    Object? heading,
+    bool textControls = false,
+    Map<String, dynamic> rowProps = const {},
+    Set<int> selected = const {},
+    Widget Function(Widget table)? scrollView}) async {
+  final backend = _Backend();
+  var id = 1;
+  Map<String, dynamic> control(String type, Map<String, dynamic> properties) =>
+      {'_c': type, '_i': id++, ...properties};
+
+  final table = Control.fromMap(
+      control('DataTable', {
+        ...props,
+        'columns': [
+          control('DataColumn', {'label': heading ?? 'A'}),
+          control('DataColumn', {'label': 'B'}),
+        ],
+        'rows': [
+          for (var r = 0; r < rows; r++)
+            control('DataRow', {
+              ...rowProps,
+              if (selected.contains(r)) 'selected': true,
+              'cells': [
+                for (var c = 0; c < 2; c++)
+                  control('DataCell', {
+                    'content': content?.call(r, c) ??
+                        (textControls
+                            ? control('Text',
+                                {'value': text?.call(r, c) ?? 'r$r c$c'})
+                            : text?.call(r, c) ?? 'r$r c$c')
+                  })
+              ]
+            })
+        ],
+      }),
+      backend);
+
+  await tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
+      value: backend,
+      child: MaterialApp(
+          home: Scaffold(
+              body: (scrollView ??
+                      (table) => SingleChildScrollView(child: table))(
+                  ControlWidget(control: table))))));
+  await tester.pump();
+  expect(tester.takeException(), isNull);
+  return _Table(backend, table);
+}
+
+Future<void> _scrollTo(WidgetTester tester, double offset) async {
+  tester
+      .state<ScrollableState>(find.byType(Scrollable))
+      .position
+      .jumpTo(offset);
+  await tester.pump();
+  await tester.pump();
+}
+
+/// The [FocusNode] of a [Checkbox].
+FocusNode _checkboxFocus(WidgetTester tester, Finder checkbox) =>
+    Focus.of(tester.element(find
+        .descendant(of: checkbox, matching: find.byType(CustomPaint))
+        .first));
+
+/// The header's select-all checkbox: the header is the last table.
+Finder _headerCheckbox() => find
+    .descendant(
+        of: find.bySubtype<DataTable>().last, matching: find.byType(Checkbox))
+    .first;
+
+// Fails deterministically if traversing nested controls reads a binary payload.
+class _UnreadableBytes extends ListBase<int> {
+  @override
+  int get length => 512;
+
+  @override
+  set length(int value) => throw UnsupportedError('read-only');
+
+  @override
+  int operator [](int index) => throw StateError('Visited a payload byte');
+
+  @override
+  void operator []=(int index, int value) =>
+      throw UnsupportedError('read-only');
+}
+
+void main() {
+  testWidgets('DataTable paints behind its own repaint boundary',
+      (tester) async {
+    await _pumpTable(tester, {});
+    expect(
+        find.ancestor(
+            of: find.bySubtype<DataTable>(),
+            matching: find.byType(RepaintBoundary)),
+        findsWidgets);
+    expect(
+        find.descendant(
+            of: find.byType(DataTableControl),
+            matching: find.byWidgetPredicate(
+                (w) => w is RepaintBoundary && w.child is DataTable)),
+        findsOneWidget);
+    expect(find.text('r2 c1'), findsOneWidget);
+  });
+
+  testWidgets('horizontal_lines and vertical_lines draw the table border',
+      (tester) async {
+    await _pumpTable(tester, {
+      'horizontal_lines': {'width': 2.0, 'color': 'red'},
+      'vertical_lines': {'width': 3.0, 'color': 'blue'},
+    });
+    final border =
+        tester.widget<DataTable>(find.bySubtype<DataTable>()).border!;
+    expect(border.horizontalInside.width, 2.0);
+    expect(border.horizontalInside.color, Colors.red);
+    expect(border.verticalInside.width, 3.0);
+    expect(border.verticalInside.color, Colors.blue);
+  });
+
+  testWidgets('a long table builds only the rows near the viewport',
+      (tester) async {
+    await _pumpTable(tester, {}, rows: 1000, text: (r, c) => 'r$r c$c');
+
+    // Heading row (56) plus 1,000 rows of 48, as one DataTable would be.
+    expect(tester.getSize(find.byType(DataTableControl)).height, 56 + 48000);
+    expect(find.text('A'), findsOneWidget);
+    expect(find.text('r0 c0'), findsOneWidget);
+    expect(find.text('r29 c0'), findsOneWidget);
+    expect(find.text('r60 c0'), findsNothing);
+    expect(find.text('r500 c0'), findsNothing);
+    expect(find.text('r999 c1'), findsNothing);
+
+    // Rows are where one big table would put them.
+    expect(tester.getTopLeft(find.text('r10 c0')).dy,
+        moreOrLessEquals(tester.getTopLeft(find.text('r0 c0')).dy + 480));
+
+    await _scrollTo(tester, 56 + 500 * 48);
+    expect(find.text('r500 c0'), findsOneWidget);
+    expect(tester.getTopLeft(find.text('r500 c0')).dy, lessThan(48));
+    expect(find.text('r0 c0'), findsNothing);
+
+    await _scrollTo(tester, 56 + 48000 - 600);
+    expect(find.text('r999 c1'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('long table columns line up and fit text not yet shown',
+      (tester) async {
+    const long = 'a much, much longer value far down the table';
+    await _pumpTable(tester, {},
+        rows: 1000, text: (r, c) => r == 900 && c == 0 ? long : 'r$r c$c');
+
+    final b = tester.getTopLeft(find.text('B')).dx;
+    for (final cell in ['r0 c1', 'r9 c1', 'r10 c1', 'r25 c1']) {
+      expect(tester.getTopLeft(find.text(cell)).dx, b, reason: cell);
+    }
+    // Column A is already wide enough for row 900.
+    expect(
+        b,
+        greaterThan(
+            tester.getSize(find.text(long, skipOffstage: false)).width));
+
+    await _scrollTo(tester, 56 + 895 * 48);
+    expect(tester.getTopLeft(find.text('B')).dx, b);
+    expect(tester.getTopLeft(find.text('r900 c1')).dx, b);
+    expect(tester.getTopRight(find.text(long)).dx, lessThan(b));
+  });
+
+  testWidgets('long table of Text controls fits text not yet shown',
+      (tester) async {
+    const long = 'a much, much longer value far down the table';
+    await _pumpTable(tester, {},
+        rows: 1000,
+        textControls: true,
+        text: (r, c) => r == 900 && c == 0 ? long : 'r$r c$c');
+
+    final b = tester.getTopLeft(find.text('B')).dx;
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, b);
+    await _scrollTo(tester, 56 + 895 * 48);
+    expect(tester.getTopLeft(find.text('r900 c1')).dx, b);
+    expect(tester.getTopRight(find.text(long)).dx, lessThan(b));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('long table header checkbox selects rows not yet shown',
+      (tester) async {
+    final table = await _pumpTable(tester, {'show_checkbox_column': true},
+        rows: 300, rowProps: {'on_select_change': true});
+
+    expect(find.byType(Checkbox), findsWidgets);
+    final header = _headerCheckbox();
+    expect(tester.widget<Checkbox>(header).value, false);
+
+    await tester.tap(header);
+    expect(table.backend.events, hasLength(300));
+    expect(table.backend.events.first,
+        (table.rows.first.id, 'select_change', true));
+    expect(
+        table.backend.events.last, (table.rows.last.id, 'select_change', true));
+  });
+
+  testWidgets('long table header checkbox shows rows selected out of view',
+      (tester) async {
+    await _pumpTable(tester, {'show_checkbox_column': true},
+        rows: 300, rowProps: {'on_select_change': true}, selected: {250});
+    expect(tester.widget<Checkbox>(_headerCheckbox()).value, isNull);
+  });
+
+  testWidgets('zero-height rows use the eager table', (tester) async {
+    await _pumpTable(
+        tester,
+        {
+          'data_row_min_height': 0.0,
+          'data_row_max_height': 0.0,
+        },
+        rows: 100);
+
+    expect(tester.widget<DataTable>(find.bySubtype<DataTable>()).rows,
+        hasLength(100));
+  });
+
+  testWidgets('scaled tables build rows in the visible viewport',
+      (tester) async {
+    await _pumpTable(
+        tester,
+        {
+          'scale': {
+            'scale': 0.5,
+            'alignment': {'x': -1.0, 'y': -1.0},
+          },
+        },
+        rows: 1000);
+
+    expect(
+        tester.getTopLeft(find.text('r10 c0')).dy -
+            tester.getTopLeft(find.text('r0 c0')).dy,
+        240);
+    await _scrollTo(tester, 5000);
+    final row = find.text('r215 c0');
+    expect(row, findsOneWidget);
+    expect(tester.getTopLeft(row).dy, inInclusiveRange(0, 600));
+  });
+
+  testWidgets('long tables remeasure offscreen and visible text edits',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    final original = tester.getTopLeft(find.text('B')).dx;
+    final content = table.rows[700].children('cells').first.child('content')!;
+    const long = 'A much longer value in row 700';
+    expect(find.text('r700 c0'), findsNothing);
+
+    content.update({'value': long}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(find.text(long), findsNothing);
+    final expanded = tester.getTopLeft(find.text('B')).dx;
+    expect(expanded, greaterThan(original));
+
+    await _scrollTo(tester, 56 + 700 * 48);
+    expect(find.text(long), findsOneWidget);
+    content.update({'value': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(find.text('r700 c0'), findsOneWidget);
+    expect(tester.getTopLeft(find.text('B')).dx, original);
+    expect(tester.getTopLeft(find.text('r700 c1')).dx, original);
+  });
+
+  testWidgets('long tables remeasure when heading text shrinks',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 100,
+        heading: {
+          '_c': 'Text',
+          '_i': 100000,
+          'value': 'A long column heading'
+        });
+    final before = tester.getTopLeft(find.text('B')).dx;
+    table.control
+        .children('columns')
+        .first
+        .child('label')!
+        .update({'value': 'A'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final after = tester.getTopLeft(find.text('B')).dx;
+    expect(after, lessThan(before));
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, after);
+  });
+
+  testWidgets('chunks realign when only a minimum column width grows',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await _pumpTable(tester, {},
+        rows: 1000,
+        text: (r, c) => '${List.filled(9, 'word').join(' ')} r$r c$c',
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+
+    final header = tester.getTopLeft(find.text('B')).dx;
+    expect(header, greaterThan(before));
+    for (final row in [690, 700]) {
+      expect(tester.getTopLeft(find.textContaining('r$row c1')).dx, header);
+    }
+  });
+
+  testWidgets('clipped table checkboxes are absent from accessibility',
+      (tester) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      final table = await _pumpTable(
+          tester,
+          {
+            'show_checkbox_column': true,
+            'horizontal_lines': {'width': 2.0, 'color': 'red'},
+          },
+          rows: 100,
+          rowProps: {'on_select_change': true});
+      final header = find.descendant(
+          of: find.bySubtype<DataTable>().last,
+          matching: find.byType(Checkbox));
+      final chunk = find.descendant(
+          of: find.bySubtype<DataTable>().first,
+          matching: find.byType(Checkbox));
+
+      final owner = tester.getSemantics(header.first).owner!;
+      final actionableNodes = <int>{};
+      bool collectActions(SemanticsNode node) {
+        final data = node.getSemanticsData();
+        if (data.flagsCollection.isHidden) return true;
+        if (data.hasAction(SemanticsAction.tap)) actionableNodes.add(node.id);
+        node.visitChildren(collectActions);
+        return true;
+      }
+
+      collectActions(owner.rootSemanticsNode!);
+      bool hasTap(Finder finder) =>
+          actionableNodes.contains(tester.getSemantics(finder).id);
+
+      expect(hasTap(header.first), isTrue);
+      expect(hasTap(chunk.at(1)), isTrue);
+      expect(hasTap(header.at(1)), isFalse);
+      expect(hasTap(header.at(2)), isFalse);
+      expect(hasTap(chunk.first), isFalse);
+      owner.performAction(
+          tester.getSemantics(header.first).id, SemanticsAction.tap);
+      expect(table.backend.events, hasLength(100));
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('build_rows_on_demand false builds every row', (tester) async {
+    await _pumpTable(tester, {'build_rows_on_demand': false}, rows: 300);
+    expect(tester.widget<DataTable>(find.bySubtype<DataTable>()).rows,
+        hasLength(300));
+    expect(find.text('r299 c0', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets('long table follows a scroll position swapped in',
+      (tester) async {
+    ScrollPhysics? physics;
+    late StateSetter setPhysics;
+    await _pumpTable(tester, {},
+        rows: 1000,
+        // The boundary keeps scrolling from painting the table, so only the
+        // scroll position's listener can bring in new rows.
+        scrollView: (table) => StatefulBuilder(builder: (context, setState) {
+              setPhysics = setState;
+              return SingleChildScrollView(
+                  physics: physics, child: RepaintBoundary(child: table));
+            }));
+    final before =
+        tester.state<ScrollableState>(find.byType(Scrollable)).position;
+    setPhysics(() => physics = const BouncingScrollPhysics());
+    await tester.pump();
+    final after =
+        tester.state<ScrollableState>(find.byType(Scrollable)).position;
+    expect(after, isNot(same(before)));
+
+    after.jumpTo(56 + 500 * 48);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('r500 c0'), findsOneWidget);
+  });
+
+  testWidgets('hidden checkboxes of a long table take no keyboard focus',
+      (tester) async {
+    final table = await _pumpTable(tester, {'show_checkbox_column': true},
+        rows: 100, rowProps: {'on_select_change': true});
+    final header = find.descendant(
+        of: find.bySubtype<DataTable>().last, matching: find.byType(Checkbox));
+    final chunk = find.descendant(
+        of: find.bySubtype<DataTable>().first, matching: find.byType(Checkbox));
+    final seed = find.descendant(
+        of: find.byType(Offstage, skipOffstage: false),
+        matching: find.byType(Checkbox, skipOffstage: false));
+
+    expect(_checkboxFocus(tester, header.first).canRequestFocus, isTrue);
+    expect(_checkboxFocus(tester, chunk.at(1)).canRequestFocus, isTrue);
+    // The header's stand-in rows, a chunk's hidden heading, the seed table.
+    expect(_checkboxFocus(tester, header.at(1)).canRequestFocus, isFalse);
+    expect(_checkboxFocus(tester, header.at(2)).canRequestFocus, isFalse);
+    expect(_checkboxFocus(tester, chunk.first).canRequestFocus, isFalse);
+    expect(seed, findsWidgets);
+    expect(_checkboxFocus(tester, seed.first).canRequestFocus, isFalse);
+
+    // Tab across the first chunks: focus never lands on a hidden checkbox.
+    final hidden = {
+      _checkboxFocus(tester, header.at(1)),
+      _checkboxFocus(tester, header.at(2)),
+      for (var i = 0; i < 3; i++)
+        _checkboxFocus(
+            tester,
+            find
+                .descendant(
+                    of: find.bySubtype<DataTable>().at(i),
+                    matching: find.byType(Checkbox))
+                .first),
+    };
+    final row10 = _checkboxFocus(
+        tester,
+        find
+            .descendant(
+                of: find.bySubtype<DataTable>().at(1),
+                matching: find.byType(Checkbox))
+            .at(1));
+    var reachedRow10 = false;
+    for (var i = 0; i < 60 && !reachedRow10; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      final focused = FocusManager.instance.primaryFocus;
+      expect(hidden, isNot(contains(focused)));
+      reachedRow10 = focused == row10;
+    }
+    expect(reachedRow10, isTrue);
+    expect(table.backend.events, isEmpty);
+  });
+
+  testWidgets('a tap on the bottom of a row above a chunk goes to that row',
+      (tester) async {
+    final table = await _pumpTable(
+        tester,
+        {
+          'show_checkbox_column': true,
+          'horizontal_lines': {'width': 6.0, 'color': 'red'},
+        },
+        rows: 100,
+        rowProps: {'on_select_change': true});
+    final top = tester.getTopLeft(find.byType(DataTableControl)).dy;
+    final x = tester.getCenter(_headerCheckbox()).dx;
+    // Row 9, the last of the first chunk, 2 px above its bottom: under the
+    // line that the next chunk draws.
+    await tester.tapAt(Offset(x, top + 56 + 10 * 48 - 2));
+    expect(table.backend.events, [(table.rows[9].id, 'select_change', true)]);
+  });
+
+  testWidgets('long table keeps widths of rows scrolled away on a rebuild',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(before));
+
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+    expect(find.text('r700 c1'), findsNothing);
+    table.rows[0].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, wide);
+  });
+
+  testWidgets('long table forgets widths of rows that changed', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .update({'content': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+  });
+
+  testWidgets('only the content of rows not built rebuilds a long table',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    Control content(int row) =>
+        table.rows[row].children('cells').first.child('content')!;
+    expect(content(0).notifyParent, isFalse);
+    expect(content(700).notifyParent, isTrue);
+
+    // A shown Text that grows widens its column by itself.
+    final original = tester.getTopLeft(find.text('B')).dx;
+    const long = 'A much longer value in row 0';
+    content(0).update({'value': long}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(original));
+    expect(tester.getTopLeft(find.text('r1 c1')).dx, wide);
+
+    await _scrollTo(tester, 56 + 700 * 48);
+    expect(content(700).notifyParent, isFalse);
+    expect(content(0).notifyParent, isTrue);
+  });
+
+  testWidgets('long table forgets widths of content that shrank out of view',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .child('content')!
+        .update({'width': 10.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, before);
+  });
+
+  testWidgets('long table forgets widths of text restored out of view',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    final content = table.rows[0].children('cells').first.child('content')!;
+    final original = tester.getTopLeft(find.text('B')).dx;
+    content
+        .update({'value': 'A much longer value in row 0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(original));
+
+    await _scrollTo(tester, 56 + 500 * 48);
+    content.update({'value': 'r0 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, original);
+    expect(tester.getTopLeft(find.text('r500 c1')).dx, original);
+  });
+
+  testWidgets('long table keeps widths measured after a shown edit',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 10.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    table.rows[5]
+        .children('cells')
+        .first
+        .child('content')!
+        .update({'width': 340.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(before));
+
+    // Row 5 scrolls away, then the table rebuilds.
+    await _scrollTo(tester, 56 + 500 * 48);
+    await tester.pumpAndSettle();
+    table.rows[500].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+    expect(tester.getTopLeft(find.text('r500 c1')).dx, wide);
+  });
+
+  testWidgets('long table keeps widths after a paint-only edit',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 10.0, 'height': 10.0}
+            : null);
+    final container = table.rows[5].children('cells').first.child('content')!;
+    container.update({'width': 340.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+
+    // A color change repaints the cell without measuring it again.
+    container.update({'bgcolor': 'red'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+
+    // Row 5 scrolls away, then the table rebuilds.
+    await _scrollTo(tester, 56 + 500 * 48);
+    await tester.pumpAndSettle();
+    table.rows[500].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+  });
+
+  testWidgets('long table forgets widths of nested content out of view',
+      (tester) async {
+    const long = 'a much, much longer value nested in row 700';
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {
+                '_c': 'Container',
+                '_i': 100000,
+                'content': {'_c': 'Text', '_i': 100001, 'value': long},
+              }
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .child('content')!
+        .child('content')!
+        .update({'value': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, before);
+  });
+
+  testWidgets(
+      'long table forgets widths of an edit not laid out before '
+      'its row goes', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 10.0, 'height': 10.0}
+            : null);
+    final content = table.rows[5].children('cells').first.child('content')!;
+    final before = tester.getTopLeft(find.text('B')).dx;
+    content.update({'width': 340.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+
+    // Scroll away, and shrink the cell before the next frame lays it out.
+    tester
+        .state<ScrollableState>(find.byType(Scrollable))
+        .position
+        .jumpTo(56 + 500 * 48);
+    content.update({'width': 10.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    table.rows[500].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+    expect(tester.getTopLeft(find.text('r500 c1')).dx, before);
+  });
+
+  testWidgets('width measurement leaves size events to the visible Text',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 120,
+        content: (r, c) => r == 0 && c == 0
+            ? {
+                '_c': 'Text',
+                '_i': 120001,
+                'value': 'longest text in the table',
+                'on_size_change': true,
+                'size_change_interval': 0
+              }
+            : null);
+    await tester.pumpAndSettle();
+    final events = table.backend.events
+        .where((e) => e.$1 == 120001 && e.$2 == 'size_change')
+        .toList();
+    expect(events, hasLength(1));
+  });
+
+  testWidgets('table fills enlarged window', (tester) async {
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(800, 240);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await _pumpTable(tester, {}, rows: 300);
+    await tester.pumpAndSettle();
+    tester.view.physicalSize = const Size(800, 1700);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byType(Scrollable)).height, 1700);
+    expect(find.text('r32 c0'), findsOneWidget);
+  });
+
+  testWidgets('a cell replaced just before eviction drops its old width',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 110000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    tester
+        .state<ScrollableState>(find.byType(Scrollable))
+        .position
+        .jumpTo(56 + 500 * 48);
+    table.rows[5]
+        .children('cells')
+        .first
+        .update({'content': 'x'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, lessThan(wide));
+  });
+
+  testWidgets(
+      'lazy rows share one semantic table and keep their absolute indices',
+      (tester) async {
+    await _pumpTable(tester, {}, rows: 300);
+
+    SemanticsNode ancestorWithRole(SemanticsNode? node, SemanticsRole role) {
+      while (node != null && node.role != role) {
+        node = node.parent;
+      }
+      expect(node, isNotNull, reason: 'missing $role');
+      return node!;
+    }
+
+    SemanticsNode checkCell(String text, int row, int column) {
+      final node = tester.getSemantics(find.text(text));
+      final semanticRow = ancestorWithRole(node, SemanticsRole.row);
+      expect(semanticRow.indexInParent, row);
+      final cell = ancestorWithRole(node, SemanticsRole.cell);
+      expect(cell.indexInParent, column);
+      expect(semanticRow.parent!.role, SemanticsRole.table);
+      return semanticRow.parent!;
+    }
+
+    final table = checkCell('r0 c0', 1, 0);
+    expect(checkCell('r10 c1', 11, 1), same(table));
+    final heading = tester.getSemantics(find.text('A'));
+    expect(ancestorWithRole(heading, SemanticsRole.columnHeader), isNotNull);
+    expect(ancestorWithRole(heading, SemanticsRole.row).indexInParent, 0);
+    expect(ancestorWithRole(heading, SemanticsRole.table), same(table));
+
+    await _scrollTo(tester, 200 * 48 + 56);
+    expect(find.text('r0 c0'), findsNothing);
+    expect(checkCell('r200 c1', 201, 1), same(table));
+    final rows = <int>[];
+    table.visitChildren((node) {
+      expect(node.role, SemanticsRole.row);
+      rows.add(node.indexInParent!);
+      return true;
+    });
+    expect(rows, contains(201));
+    expect(rows, isNot(contains(1)));
+  });
+
+  testWidgets('list view scroll brings rows of nested table into view',
+      (tester) async {
+    final outer = ScrollController();
+    addTearDown(outer.dispose);
+    await _pumpTable(tester, {},
+        rows: 300,
+        scrollView: (table) => ListView(controller: outer, children: [
+              SizedBox(
+                  height: 6000,
+                  child: SingleChildScrollView(primary: false, child: table))
+            ]));
+    await tester.pumpAndSettle();
+    outer.jumpTo(4500);
+    await tester.pumpAndSettle();
+    expect(find.text('r95 c0'), findsOneWidget);
+  });
+
+  testWidgets('row selection skips numeric payloads in offscreen cells',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 120,
+        content: (r, c) => r == 119 && c == 0
+            ? {'_c': 'Image', '_i': 120001, 'src': 'offscreen.png'}
+            : null);
+    final image = table.rows.last.children('cells').first.child('content')!;
+    image.properties['src'] = _UnreadableBytes();
+    table.rows.first.update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+}

@@ -30,6 +30,14 @@ class SecureStorageEvent(ft.Event["SecureStorage"]):
 class SecureStorage(Service):
     """
     A class to manage secure storage in a Flet application across multiple platforms.
+
+    Note:
+        An app embedded in another with [`FletApp`][flet.FletApp] gets its own
+        space in the store, as with [`SharedPreferences`][flet.SharedPreferences]:
+        its keys go under the prefix the host sets with
+        [`FletApp.storage_prefix`][flet.FletApp.storage_prefix], so it can't
+        read, list or clear the host's keys. The app uses plain key names;
+        `get_all()` lists its own entries without the prefix.
     """
 
     ios_options: IOSOptions = field(default_factory=lambda: IOSOptions())
