@@ -113,10 +113,15 @@ def test_keyboard_event_key_decoding(event_type):
     if event_type is ft.KeyboardEvent:
         data.update(shift=False, ctrl=False, alt=False, meta=False)
 
-    assert (
-        from_dict(event_type, {**data, "key": "Arrow Right"}).key
-        is ft.KeyboardKey.ARROW_RIGHT
-    )
-    unknown = from_dict(event_type, {**data, "key": "Ü"}).key
-    assert type(unknown) is str
-    assert unknown == "Ü"
+    legacy = from_dict(event_type, {**data, "key": "Arrow Right"})
+    assert legacy.key is ft.KeyboardKey.ARROW_RIGHT
+    assert legacy.physical_key is None
+
+    azerty = from_dict(event_type, {**data, "key": "Z", "physical_key": 0x0007001A})
+    assert azerty.key is ft.KeyboardKey.Z
+    assert azerty.physical_key is ft.PhysicalKeyboardKey.W
+    unknown = from_dict(event_type, {**data, "key": "Ü", "physical_key": 0xFFFF0001})
+    assert type(unknown.key) is str
+    assert unknown.key == "Ü"
+    assert type(unknown.physical_key) is int
+    assert unknown.physical_key == 0xFFFF0001

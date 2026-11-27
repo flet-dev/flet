@@ -968,6 +968,7 @@ docs:
       - types/overlayvisibilitymode.md
       - types/pageplatform.md
       - types/paintingstyle.md
+      - types/physicalkeyboardkey.md
       - types/pointerdevicetype.md
       - types/pointmode.md
       - types/popupmenuposition.md

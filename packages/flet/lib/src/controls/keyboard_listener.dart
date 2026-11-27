@@ -58,15 +58,17 @@ class _KeyboardListenerControlState extends State<KeyboardListenerControl> {
       autofocus: widget.control.getBool("autofocus", false)!,
       includeSemantics: widget.control.getBool("include_semantics", true)!,
       onKeyEvent: (keyEvent) {
-        if (keyEvent is KeyDownEvent) {
-          widget.control
-              .triggerEvent("key_down", {"key": keyEvent.logicalKey.keyLabel});
-        } else if (keyEvent is KeyUpEvent) {
-          widget.control
-              .triggerEvent("key_up", {"key": keyEvent.logicalKey.keyLabel});
-        } else if (keyEvent is KeyRepeatEvent) {
-          widget.control.triggerEvent(
-              "key_repeat", {"key": keyEvent.logicalKey.keyLabel});
+        final name = switch (keyEvent) {
+          KeyDownEvent() => "key_down",
+          KeyUpEvent() => "key_up",
+          KeyRepeatEvent() => "key_repeat",
+          _ => null,
+        };
+        if (name != null) {
+          widget.control.triggerEvent(name, {
+            "key": keyEvent.logicalKey.keyLabel,
+            "physical_key": keyEvent.physicalKey.usbHidUsage,
+          });
         }
       },
       child: content,

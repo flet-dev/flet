@@ -45,7 +45,7 @@ from flet.controls.device_info import (
     WindowsDeviceInfo,
 )
 from flet.controls.exceptions import FletUnsupportedPlatformException
-from flet.controls.keyboard_key import KeyboardKey
+from flet.controls.keyboard_key import KeyboardKey, PhysicalKeyboardKey
 from flet.controls.multi_view import MultiView
 from flet.controls.package_info import PackageInfo
 from flet.controls.query_string import QueryString
@@ -459,6 +459,15 @@ class KeyboardEvent(Event["Page"]):
     meta: bool
     """
     Whether Meta (Command/Windows) was pressed when the key event was emitted.
+    """
+
+    physical_key: Union[PhysicalKeyboardKey, int, None] = None
+    """
+    The position of the key that was pressed on the keyboard, such as
+    :attr:`flet.PhysicalKeyboardKey.W`, whatever the active layout.
+
+    A key that has no :class:`~flet.PhysicalKeyboardKey` member is its USB HID
+    usage code. Older clients that omit the physical key leave this as `None`.
     """
 
 

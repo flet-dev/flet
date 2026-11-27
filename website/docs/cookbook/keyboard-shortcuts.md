@@ -11,6 +11,7 @@ In addition to form controls' `.autofocus` property and [`TextField.focus()`](..
 To capture all keystrokes implement `page.on_keyboard_event` handler. Event handler parameter `e` is an instance of `KeyboardEvent` class with the following properties:
 
 * `key` - the pressed key, a [`KeyboardKey`][flet.KeyboardKey] such as `KeyboardKey.A`, `KeyboardKey.ENTER` or `KeyboardKey.F5`.
+* `physical_key` - the position of the pressed key on the keyboard, a [`PhysicalKeyboardKey`][flet.PhysicalKeyboardKey] such as `PhysicalKeyboardKey.W`.
 * `shift` - `True` if "Shift" key is pressed.
 * `ctrl` - `True` if "Control" key is pressed.
 * `alt` - `True` if "Alt" ("Option") key is pressed.
@@ -50,6 +51,16 @@ def on_keyboard(e: ft.KeyboardEvent):
 ```
 
 Letter keys are reported in upper case, whether or not Shift is pressed.
+
+For controls that depend on where keys sit on the keyboard rather than what they type, such as moving with <kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd> and <kbd>D</kbd>, compare `e.physical_key` with a [`PhysicalKeyboardKey`][flet.PhysicalKeyboardKey] member. Physical keys are named after the US QWERTY layout and stay in place on other layouts: on a French AZERTY keyboard, the key that types <kbd>Z</kbd> is `PhysicalKeyboardKey.W`.
+
+```python
+def on_keyboard(e: ft.KeyboardEvent):
+    if e.physical_key == ft.PhysicalKeyboardKey.W:
+        move_up()
+    elif e.physical_key == ft.PhysicalKeyboardKey.A:
+        move_left()
+```
 
 Below is a more advanced example:
 

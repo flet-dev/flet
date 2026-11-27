@@ -333,7 +333,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.icon_data import IconData
     from flet.controls.id_counter import IdCounter
-    from flet.controls.keyboard_key import KeyboardKey
+    from flet.controls.keyboard_key import KeyboardKey, PhysicalKeyboardKey
     from flet.controls.keys import (
         Key,
         KeyValue,
@@ -1089,6 +1089,7 @@ __all__ = [
     "PaintSweepGradient",
     "PaintingStyle",
     "PastedFile",
+    "PhysicalKeyboardKey",
     "PickFiles",
     "Placeholder",
     "PlatformBrightnessChangeEvent",
@@ -1644,6 +1645,7 @@ _LAZY = {
     "PaintRadialGradient": "flet.controls.painting",
     "PaintSweepGradient": "flet.controls.painting",
     "PaintingStyle": "flet.controls.painting",
+    "PhysicalKeyboardKey": "flet.controls.keyboard_key",
     "PickFiles": "flet.controls.services.file_picker",
     "Placeholder": "flet.controls.core.placeholder",
     "PlatformBrightnessChangeEvent": "flet.controls.page",
