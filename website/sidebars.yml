@@ -1106,6 +1106,7 @@ docs:
       - types/usecontext.md
       - types/useeffect.md
       - types/usememo.md
+      - types/usepagesize.md
       - types/useref.md
       - types/use_route_loader_data.md
       - types/use_route_location.md
