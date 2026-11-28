@@ -94,6 +94,39 @@ def UserView(user: User, delete_user) -> ft.Control:
     ...
 ```
 
+### Input controls
+
+An input control like a `TextField` has a value that both the user and your code can change. A component can handle it in one of two ways.
+
+**Controlled**: the value lives in state, and `on_change` writes what the user types back to it. This is the recommended way, and what the example below does. The state always matches the screen, so your code sets the text, including to `""`, by changing the state:
+
+```python
+@ft.component
+def NameField() -> ft.Control:
+    name, set_name = ft.use_state("")
+    return ft.Row([
+        ft.TextField(value=name, on_change=lambda e: set_name(e.control.value)),
+        ft.Button("Clear", on_click=lambda: set_name("")),
+    ])
+```
+
+**Uncontrolled**: the field keeps what the user types, and your code reads its `value` only when it needs it, for example on submit. Pass `value=None`, which keeps the user's text when the component re-renders; with the default `value=""`, a re-render would replace the text with `""`.
+
+Like every control a component returns, an uncontrolled field is read-only for your code: setting its `value` raises an error saying the control is frozen. To empty it, call [`clear()`][flet.TextField.clear]:
+
+```python
+@ft.component
+def NameForm() -> ft.Control:
+    async def submit():
+        print(f"Hello, {name.value}!")
+        await name.clear()
+
+    return ft.Row([
+        name := ft.TextField(label="Name", value=None),
+        ft.Button("Submit", on_click=submit),
+    ])
+```
+
 ### Example
 
 The state lives in instances of two `@ft.observable` classes: `User` (`first_name`, `last_name`) and `App` (`users: list[User]`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
