@@ -894,30 +894,11 @@ class TextField(FormFieldControl, AdaptiveControl):
         """
         Clears the text of this field.
 
-        :attr:`value` becomes an empty string and the caret moves to the start.
+        :attr:`value` becomes an empty string.
         Like setting :attr:`value`, this doesn't trigger :attr:`on_change`.
 
-        In a component, this is the way to empty a field whose :attr:`value` is not
-        bound to state. If :attr:`value` comes from state, set that state to an
-        empty string instead.
-
-        Example:
-            `value=None` marks the field as uncontrolled, so the text the user
-            typed survives re-renders of the component instead of being replaced
-            by the default empty :attr:`value`.
-
-            ```python
-            @ft.component
-            def App():
-                async def reset(e):
-                    await name.clear()
-
-                return ft.Column(
-                    [
-                        name := ft.TextField(label="Name", value=None),
-                        ft.Button("Reset", on_click=reset),
-                    ]
-                )
-            ```
+        In a declarative app, built from `@ft.component` functions, this is the
+        way to empty a field whose :attr:`value` is not bound to state. If
+        :attr:`value` comes from state, set that state to an empty string instead.
         """
         await self._invoke_method("clear")

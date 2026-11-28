@@ -122,16 +122,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
     }
   }
 
-  /// Empties the field and reports the empty `value` to Python.
-  ///
-  /// Like a `value` change made by Python, this is not a user edit, so it
-  /// doesn't trigger `on_change`.
+  /// Sets `value` to an empty string, as if Python had set it, so `on_change`
+  /// doesn't fire.
   void _clear() {
-    _controller.clear();
-    widget.control.updateProperties({"value": ""});
-    setState(() {
-      _value = "";
-    });
+    widget.control.updateProperties({"value": ""}, notify: true);
   }
 
   void _sendPastedFiles(List<PastedFile> files) {
