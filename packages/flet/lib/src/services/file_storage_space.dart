@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 
 /// Where `ft.FileStorage` keeps an app's files: OPFS on web, the app support
 /// directory elsewhere. Paths are lists of already-validated segments.
@@ -9,6 +12,9 @@ abstract class FileStorageBackend {
   /// Replaces the file atomically: a reader sees the old bytes or the new
   /// ones, never a mix. Creates parent folders.
   Future<void> write(List<String> path, Uint8List data);
+
+  /// Serializes mutations of a folder across clients, including quota accounting.
+  Future<T> mutate<T>(String folder, Future<T> Function() action);
 
   /// Whether a file was removed.
   Future<bool> delete(List<String> path);
@@ -42,8 +48,7 @@ class FileStorageQuotaError implements Exception {
   String toString() => message;
 }
 
-/// Suffix of the temporary file a native write goes through; names can't
-/// end with it.
+/// Reserved suffix for native temporary files and the OPFS staging entry.
 const fileStorageTempSuffix = ".flet-tmp";
 
 const _maxNameLength = 1024;
@@ -84,22 +89,9 @@ List<String> fileStorageSegments(String name) {
   return segments;
 }
 
-/// The folder (under `flet/`) of the app whose `SharedPreferences` prefix is
-/// [prefix]: `root` for a top-level app with no prefix, `p.<prefix>` with
-/// anything but letters, digits, `.`, `-` and `_` percent-encoded otherwise.
-/// Distinct prefixes always get distinct folders.
-String fileStorageFolder(String prefix) {
-  if (prefix.isEmpty) return "root";
-  var out = StringBuffer("p.");
-  for (var unit in Uri.encodeComponent(prefix).codeUnits) {
-    var c = String.fromCharCode(unit);
-    // encodeComponent leaves ! ' ( ) * ~ alone; encode them too.
-    out.write("!'()*~".contains(c)
-        ? "%${unit.toRadixString(16).toUpperCase()}"
-        : c);
-  }
-  return out.toString();
-}
+/// A bounded, case-stable directory name even on case-insensitive filesystems.
+String fileStorageFolder(String prefix) =>
+    prefix.isEmpty ? "root" : "p-${sha256.convert(utf8.encode(prefix))}";
 
 /// One app's space in `ft.FileStorage`: its own folder, an optional quota
 /// and the locks it holds. Runs the service's methods.
@@ -111,6 +103,7 @@ class FileStorageSpace {
   final int? quota;
 
   final Set<String> _held = {};
+  bool _disposed = false;
 
   FileStorageSpace(this.backend, String prefix, {this.quota})
       : folder = fileStorageFolder(prefix);
@@ -127,9 +120,11 @@ class FileStorageSpace {
       case "read":
         return backend.read(_path(args["name"]));
       case "write":
-        return _write(args["name"], _bytes(args["data"]));
+        return backend.mutate(
+            folder, () => _write(args["name"], _bytes(args["data"])));
       case "delete":
-        return backend.delete(_path(args["name"]));
+        return backend.mutate(
+            folder, () => backend.delete(_path(args["name"])));
       case "exists":
         var segments = fileStorageSegments(args["name"]);
         return (await backend.list(_root)).containsKey(segments.join("/"));
@@ -145,9 +140,14 @@ class FileStorageSpace {
         return (await backend.list(_root)).values.fold<int>(0, (a, b) => a + b);
       case "lock":
         var name = _lockName(args["name"]);
+        if (_disposed) return false;
         if (_held.contains(name)) return true;
         var ms = ((args["timeout"] ?? 5.0) as num) * 1000;
         var ok = await backend.lock(name, Duration(milliseconds: ms.round()));
+        if (ok && _disposed) {
+          backend.unlock(name);
+          return false;
+        }
         if (ok) _held.add(name);
         return ok;
       case "unlock":
@@ -177,6 +177,7 @@ class FileStorageSpace {
 
   /// Releases every lock this space still holds: the app went away.
   void releaseLocks() {
+    _disposed = true;
     for (var name in _held) {
       backend.unlock(name);
     }

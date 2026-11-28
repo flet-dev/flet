@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -87,6 +88,9 @@ class FletBackend extends ChangeNotifier {
   /// unless its host sets one, so it can't fill the store its host shares
   /// (on web, the origin's `localStorage`, about 5 MB).
   final int? sharedPreferencesQuota;
+
+  /// Quotas on ancestor prefixes whose usage includes this app's keys.
+  final Map<String, int> ancestorPreferenceQuotas;
 
   static const defaultEmbeddedFileStorageQuota = 50 * 1024 * 1024;
   static const defaultEmbeddedSharedPreferencesQuota = 1024 * 1024;
@@ -181,12 +185,24 @@ class FletBackend extends ChangeNotifier {
             storagePrefix: storagePrefix,
             parentPrefix: parentFletBackend?.storagePrefix,
             pageUri: pageUri),
-        fileStorageQuota = fileStorageQuota ??
-            (parentFletBackend != null ? defaultEmbeddedFileStorageQuota : null),
-        sharedPreferencesQuota = sharedPreferencesQuota ??
-            (parentFletBackend != null
-                ? defaultEmbeddedSharedPreferencesQuota
-                : null),
+        fileStorageQuota = _storageQuota(
+            fileStorageQuota,
+            defaultEmbeddedFileStorageQuota,
+            parentFletBackend,
+            storagePrefix,
+            parentFletBackend?.fileStorageQuota),
+        sharedPreferencesQuota = _storageQuota(
+            sharedPreferencesQuota,
+            defaultEmbeddedSharedPreferencesQuota,
+            parentFletBackend,
+            storagePrefix,
+            parentFletBackend?.sharedPreferencesQuota),
+        ancestorPreferenceQuotas = Map.unmodifiable({
+          ...?parentFletBackend?.ancestorPreferenceQuotas,
+          if (parentFletBackend?.sharedPreferencesQuota != null)
+            parentFletBackend!.storagePrefix:
+                parentFletBackend.sharedPreferencesQuota!,
+        }),
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs,
         _channelBuilder = channelBuilder,
@@ -233,6 +249,15 @@ class FletBackend extends ChangeNotifier {
         });
       }
     }
+  }
+
+  static int? _storageQuota(int? requested, int embeddedDefault,
+      FletBackend? parent, String? prefix, int? parentLimit) {
+    if (parent == null) return requested;
+    final limit = requested ?? embeddedDefault;
+    return prefix == "" && parentLimit != null
+        ? math.min(limit, parentLimit)
+        : limit;
   }
 
   /// The [storagePrefix] for a backend.

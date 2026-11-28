@@ -34,6 +34,34 @@ class _FolderBackend implements FileStorageBackend {
     return p.joinAll([base, ...segments]);
   }
 
+  // POSIX record locks are process-scoped. Queue local callers before opening
+  // the lock file, then hold the OS lock through the entire mutation.
+  static final _mutations = <String, Future<void>>{};
+
+  @override
+  Future<T> mutate<T>(String folder, Future<T> Function() action) async {
+    final path = await _path(["flet", ".locks", folder]);
+    final finished = Completer<void>();
+    final previous = _mutations[path];
+    _mutations[path] = finished.future;
+    try {
+      await previous;
+      final file = File(path);
+      await file.parent.create(recursive: true);
+      final handle = await file.open(mode: FileMode.append);
+      try {
+        await handle.lock(FileLock.blockingExclusive);
+        return await action();
+      } finally {
+        // Closing releases the OS lock, including on error.
+        await handle.close();
+      }
+    } finally {
+      finished.complete();
+      if (identical(_mutations[path], finished.future)) _mutations.remove(path);
+    }
+  }
+
   @override
   Future<Uint8List?> read(List<String> path) async {
     var file = File(await _path(path));

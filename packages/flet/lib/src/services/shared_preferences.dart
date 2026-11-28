@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../flet_backend.dart';
 import '../flet_service.dart';
+import 'storage_lock_stub.dart'
+    if (dart.library.js_interop) 'storage_lock_web.dart';
 
 /// `ft.SharedPreferences`. Every key is stored under the app's
 /// [FletBackend.storagePrefix], so each app has its own space in the store:
@@ -30,7 +33,8 @@ class SharedPreferencesService extends FletService {
     var prefs = await SharedPreferences.getInstance();
     return invokeSharedPreferencesMethod(
         prefs, control.backend.storagePrefix, name, args,
-        quota: control.backend.sharedPreferencesQuota);
+        quota: control.backend.sharedPreferencesQuota,
+        ancestorQuotas: control.backend.ancestorPreferenceQuotas);
   }
 
   @override
@@ -47,22 +51,25 @@ class SharedPreferencesService extends FletService {
 @visibleForTesting
 Future<dynamic> invokeSharedPreferencesMethod(
     SharedPreferences prefs, String prefix, String name, dynamic args,
-    {int? quota}) async {
+    {int? quota, Map<String, int> ancestorQuotas = const {}}) async {
   String key() => prefix + args["key"]!;
   switch (name) {
     case "set":
       var value = args["value"]!;
-      if (quota != null) _checkQuota(prefs, prefix, key(), value, quota);
-      if (value is String) return prefs.setString(key(), value);
-      if (value is bool) return prefs.setBool(key(), value);
-      if (value is int) return prefs.setInt(key(), value);
-      if (value is double) return prefs.setDouble(key(), value);
-      if (value is List && value.every((item) => item is String)) {
-        return prefs.setStringList(key(), value.cast<String>());
+      if (quota == null && ancestorQuotas.isEmpty) {
+        return _set(prefs, key(), value);
       }
-      throw UnsupportedError(
-          "Unsupported SharedPreferences value type: ${value.runtimeType}. "
-          "Supported: String, bool, int, double, List<String>.");
+      // A single lock also covers overlapping ancestor and child prefixes.
+      return withStorageLock("flet.shared_preferences.quota", () async {
+        if (kIsWeb) await prefs.reload();
+        for (final ancestor in ancestorQuotas.entries) {
+          if (ancestor.key != prefix) {
+            _checkQuota(prefs, ancestor.key, key(), value, ancestor.value);
+          }
+        }
+        if (quota != null) _checkQuota(prefs, prefix, key(), value, quota);
+        return _set(prefs, key(), value);
+      });
     case "get":
       return prefs.get(key());
     case "contains_key":
@@ -80,13 +87,27 @@ Future<dynamic> invokeSharedPreferencesMethod(
     case "clear":
       if (prefix.isEmpty) return prefs.clear();
       // Only this app's keys - never its host's or another app's.
-      for (var k in prefs.getKeys().where((k) => k.startsWith(prefix)).toList()) {
+      for (var k
+          in prefs.getKeys().where((k) => k.startsWith(prefix)).toList()) {
         await prefs.remove(k);
       }
       return true;
     default:
       throw Exception("Unknown SharedPreferences method: $name");
   }
+}
+
+Future<bool> _set(SharedPreferences prefs, String key, Object value) {
+  if (value is String) return prefs.setString(key, value);
+  if (value is bool) return prefs.setBool(key, value);
+  if (value is int) return prefs.setInt(key, value);
+  if (value is double) return prefs.setDouble(key, value);
+  if (value is List && value.every((item) => item is String)) {
+    return prefs.setStringList(key, value.cast<String>());
+  }
+  throw UnsupportedError(
+      "Unsupported SharedPreferences value type: ${value.runtimeType}. "
+      "Supported: String, bool, int, double, List<String>.");
 }
 
 /// Roughly what a key and its value take in the store, in bytes.

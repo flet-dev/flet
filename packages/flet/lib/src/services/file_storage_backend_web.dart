@@ -6,13 +6,13 @@ import 'dart:typed_data';
 import 'package:web/web.dart' as web;
 
 import 'file_storage_space.dart';
+import 'storage_lock_web.dart';
 
 /// `ft.FileStorage` on web: the origin private file system (OPFS), used from
 /// the page, where the app's own Python can't reach it.
 ///
-/// Writes use `createWritable()`, which commits atomically on `close()`
-/// (Chrome 86+, Firefox 111+, Safari 26+). Locks are Web Locks, shared by
-/// every tab of the origin.
+/// New files are published by moving a completed staging file. Replacements
+/// commit on `close()`. Web Locks coordinate clients across tabs.
 FileStorageBackend createFileStorageBackend() => _OpfsBackend();
 
 class _OpfsBackend implements FileStorageBackend {
@@ -42,7 +42,8 @@ class _OpfsBackend implements FileStorageBackend {
     for (var s in segments) {
       try {
         dir = await dir
-            .getDirectoryHandle(s, web.FileSystemGetDirectoryOptions(create: create))
+            .getDirectoryHandle(
+                s, web.FileSystemGetDirectoryOptions(create: create))
             .toDart;
       } catch (e) {
         if (!create && _isNotFound(e)) return null;
@@ -52,11 +53,11 @@ class _OpfsBackend implements FileStorageBackend {
     return dir;
   }
 
-  Future<web.FileSystemFileHandle?> _file(List<String> path) async {
-    var dir = await _dir(path.sublist(0, path.length - 1));
+  Future<web.FileSystemFileHandle?> _file(
+      web.FileSystemDirectoryHandle? dir, String name) async {
     if (dir == null) return null;
     try {
-      return await dir.getFileHandle(path.last).toDart;
+      return await dir.getFileHandle(name).toDart;
     } catch (e) {
       if (_isNotFound(e)) return null;
       rethrow;
@@ -64,8 +65,13 @@ class _OpfsBackend implements FileStorageBackend {
   }
 
   @override
+  Future<T> mutate<T>(String folder, Future<T> Function() action) =>
+      withStorageLock("flet.file_storage.mutate/$folder", action);
+
+  @override
   Future<Uint8List?> read(List<String> path) async {
-    var handle = await _file(path);
+    final dir = await _dir(path.sublist(0, path.length - 1));
+    final handle = await _file(dir, path.last);
     if (handle == null) return null;
     var file = await handle.getFile().toDart;
     return (await file.arrayBuffer().toDart).toDart.asUint8List();
@@ -74,13 +80,36 @@ class _OpfsBackend implements FileStorageBackend {
   @override
   Future<void> write(List<String> path, Uint8List data) async {
     var dir = await _dir(path.sublist(0, path.length - 1), create: true);
-    var handle = await dir!
-        .getFileHandle(path.last, web.FileSystemGetFileOptions(create: true))
+    final existing = await _file(dir, path.last);
+    if (existing != null) {
+      await _writeContents(existing, data);
+      return;
+    }
+    // The folder's mutation lock gives us exclusive use of the staging name.
+    // A crashed writer can leave it behind. The next write reuses it.
+    final staging = await dir!
+        .getFileHandle(
+            fileStorageTempSuffix, web.FileSystemGetFileOptions(create: true))
         .toDart;
+    try {
+      if (!(staging as JSObject).has("move")) {
+        throw UnsupportedError(
+            "Atomic FileStorage creation needs OPFS file moves.");
+      }
+      await _writeContents(staging, data);
+      await (staging as JSObject)
+          .callMethod<JSPromise<JSAny?>>("move".toJS, path.last.toJS)
+          .toDart;
+    } catch (_) {
+      await dir.removeEntry(fileStorageTempSuffix).toDart;
+      rethrow;
+    }
+  }
+
+  Future<void> _writeContents(
+      web.FileSystemFileHandle handle, Uint8List data) async {
     if (!(handle as JSObject).has("createWritable")) {
-      throw UnsupportedError(
-          "FileStorage needs a browser that can write files to its origin "
-          "private file system: Chrome 86+, Firefox 111+ or Safari 26+.");
+      throw UnsupportedError("FileStorage needs writable OPFS files.");
     }
     var stream = await handle.createWritable().toDart;
     try {
@@ -114,8 +143,8 @@ class _OpfsBackend implements FileStorageBackend {
     return out;
   }
 
-  Future<void> _walk(
-      web.FileSystemDirectoryHandle dir, String prefix, Map<String, int> out) async {
+  Future<void> _walk(web.FileSystemDirectoryHandle dir, String prefix,
+      Map<String, int> out) async {
     // FileSystemDirectoryHandle is an async iterable; package:web doesn't
     // bind values(), so step its iterator by hand.
     var iterator = (dir as JSObject).callMethod<JSObject>("values".toJS);
@@ -124,6 +153,7 @@ class _OpfsBackend implements FileStorageBackend {
           await iterator.callMethod<JSPromise<JSObject>>("next".toJS).toDart;
       if ((step["done"] as JSBoolean?)?.toDart ?? true) break;
       var handle = step["value"] as web.FileSystemHandle;
+      if (handle.name == fileStorageTempSuffix) continue;
       var name = "$prefix${handle.name}";
       if (handle.kind == "directory") {
         await _walk(handle as web.FileSystemDirectoryHandle, "$name/", out);
@@ -157,7 +187,8 @@ class _OpfsBackend implements FileStorageBackend {
 
     var options = timeout == Duration.zero
         ? web.LockOptions(ifAvailable: true)
-        : web.LockOptions(signal: web.AbortSignal.timeout(timeout.inMilliseconds));
+        : web.LockOptions(
+            signal: web.AbortSignal.timeout(timeout.inMilliseconds));
     // Settles once the lock is released (or the request is aborted).
     var done = (locks as web.LockManager)
         .request(name, options, onGranted.toJS)

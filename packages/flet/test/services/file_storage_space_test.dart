@@ -3,6 +3,7 @@
 /// locks are released with the app.
 library;
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flet/src/services/file_storage_space.dart';
@@ -11,6 +12,9 @@ import 'package:flutter_test/flutter_test.dart';
 class _MemoryBackend implements FileStorageBackend {
   final files = <String, Uint8List>{};
   final locks = <String>{};
+
+  @override
+  Future<T> mutate<T>(String folder, Future<T> Function() action) => action();
 
   @override
   Future<Uint8List?> read(List<String> path) async => files[path.join("/")];
@@ -28,7 +32,8 @@ class _MemoryBackend implements FileStorageBackend {
     final prefix = "${folder.join("/")}/";
     return {
       for (final e in files.entries)
-        if (e.key.startsWith(prefix)) e.key.substring(prefix.length): e.value.length,
+        if (e.key.startsWith(prefix))
+          e.key.substring(prefix.length): e.value.length,
     };
   }
 
@@ -37,6 +42,16 @@ class _MemoryBackend implements FileStorageBackend {
 
   @override
   void unlock(String name) => locks.remove(name);
+}
+
+class _WaitingBackend extends _MemoryBackend {
+  final grant = Completer<void>();
+
+  @override
+  Future<bool> lock(String name, Duration timeout) async {
+    await grant.future;
+    return super.lock(name, timeout);
+  }
 }
 
 void main() {
@@ -50,7 +65,8 @@ void main() {
   group("names", () {
     test("plain and nested names are fine", () {
       expect(fileStorageSegments("app.sqlite"), ["app.sqlite"]);
-      expect(fileStorageSegments("db/2026/app.sqlite"), ["db", "2026", "app.sqlite"]);
+      expect(fileStorageSegments("db/2026/app.sqlite"),
+          ["db", "2026", "app.sqlite"]);
       expect(fileStorageSegments(".hidden"), [".hidden"]);
     });
 
@@ -75,7 +91,8 @@ void main() {
         "x" * 300,
       ]) {
         expect(() => fileStorageSegments(name),
-            throwsA(isA<FileStorageNameError>()), reason: name);
+            throwsA(isA<FileStorageNameError>()),
+            reason: name);
       }
     });
   });
@@ -83,11 +100,18 @@ void main() {
   group("folders", () {
     test("a top-level app and embedded apps never share one", () {
       expect(fileStorageFolder(""), "root");
-      expect(fileStorageFolder("app.abc."), "p.app.abc.");
-      expect(fileStorageFolder("root"), "p.root");
-      expect(fileStorageFolder("a/b."), "p.a%2Fb.");
-      expect(fileStorageFolder("x~(1)"), "p.x%7E%281%29");
-      expect(fileStorageFolder("app.1."), isNot(fileStorageFolder("app.1.x.")));
+      final prefixes = [
+        "root",
+        "app",
+        "App",
+        "app.",
+        "a/b",
+        "a%2Fb",
+        "a" * 300
+      ];
+      final folders = prefixes.map(fileStorageFolder).toList();
+      expect(folders, everyElement(matches(RegExp(r"^p-[0-9a-f]{64}$"))));
+      expect(folders.toSet(), hasLength(prefixes.length));
     });
 
     test("each app sees only its own files", () async {
@@ -101,14 +125,20 @@ void main() {
       expect(await guest.invoke("delete", {"name": "secret.txt"}), isFalse);
       expect(await host.invoke("list", {}), ["secret.txt"]);
       expect(backend.files.keys,
-          {"flet/root/secret.txt", "flet/p.app.1./notes.txt"});
+          {"flet/root/secret.txt", "flet/${guest.folder}/notes.txt"});
     });
   });
 
   test("write takes bytes or a list of ints", () async {
     final s = space("app.1.");
-    await s.invoke("write", {"name": "a", "data": Uint8List.fromList([1, 2])});
-    await s.invoke("write", {"name": "b", "data": [3, 4, 5]});
+    await s.invoke("write", {
+      "name": "a",
+      "data": Uint8List.fromList([1, 2])
+    });
+    await s.invoke("write", {
+      "name": "b",
+      "data": [3, 4, 5]
+    });
     expect(await s.invoke("read", {"name": "b"}), [3, 4, 5]);
     expect(() => s.invoke("write", {"name": "c", "data": "text"}),
         throwsArgumentError);
@@ -155,16 +185,20 @@ void main() {
       expect(await a.invoke("lock", {"name": "db"}), isTrue);
       expect(await a.invoke("lock", {"name": "db"}), isTrue);
       expect(await b.invoke("lock", {"name": "db"}), isTrue);
-      expect(backend.locks,
-          {"flet.file_storage/p.app.1./db", "flet.file_storage/p.app.2./db"});
+      expect(backend.locks, {
+        "flet.file_storage/${fileStorageFolder("app.1.")}/db",
+        "flet.file_storage/${fileStorageFolder("app.2.")}/db"
+      });
       await a.invoke("unlock", {"name": "db"});
-      expect(backend.locks, {"flet.file_storage/p.app.2./db"});
+      expect(backend.locks,
+          {"flet.file_storage/${fileStorageFolder("app.2.")}/db"});
     });
 
     test("an app can't release a lock it doesn't hold", () async {
       await space("app.1.").invoke("lock", {"name": "db"});
       await space("app.1.").invoke("unlock", {"name": "db"});
-      expect(backend.locks, {"flet.file_storage/p.app.1./db"});
+      expect(backend.locks,
+          {"flet.file_storage/${fileStorageFolder("app.1.")}/db"});
     });
 
     test("go away with the app", () async {
@@ -173,6 +207,16 @@ void main() {
       await s.invoke("lock", {"name": "b"});
       s.releaseLocks();
       expect(backend.locks, isEmpty);
+    });
+
+    test("a lock granted after disposal is immediately released", () async {
+      final waiting = _WaitingBackend();
+      final space = FileStorageSpace(waiting, "app");
+      final pending = space.invoke("lock", {"name": "db"});
+      space.releaseLocks();
+      waiting.grant.complete();
+      expect(await pending, isFalse);
+      expect(waiting.locks, isEmpty);
     });
 
     test("names are checked too", () async {

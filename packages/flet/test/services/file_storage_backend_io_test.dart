@@ -17,8 +17,9 @@ void main() {
 
   test("leaves no temporary files behind", () async {
     final b = createFolderFileStorageBackend(base.path);
-    await b.write(["flet", "tmp", "a.bin"], Uint8List.fromList("abc".codeUnits));
-    final names = base
+    await b
+        .write(["flet", "tmp", "a.bin"], Uint8List.fromList("abc".codeUnits));
+    final names = Directory("${base.path}/flet/tmp")
         .listSync(recursive: true)
         .whereType<File>()
         .map((f) => f.path.split(Platform.pathSeparator).last);

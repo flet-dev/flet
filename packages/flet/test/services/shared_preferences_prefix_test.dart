@@ -5,6 +5,7 @@ library;
 
 import 'package:flet/flet.dart';
 import 'package:flet/src/services/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,8 +54,8 @@ void main() {
 
   test("an empty prefix is the plain store", () async {
     expect(await call("", "get", {"key": "settings.theme"}), "host-value");
-    expect((await call("", "get_keys", {"key_prefix": "app."}) as List).length,
-        2);
+    expect(
+        (await call("", "get_keys", {"key_prefix": "app."}) as List).length, 2);
     await call("", "clear");
     expect(prefs.getKeys(), isEmpty);
   });
@@ -101,7 +102,8 @@ void main() {
     test("the default hash is FNV-1a 32-bit", () {
       // Known FNV-1a values, so web and native agree.
       expect(FletBackend.defaultEmbeddedStoragePrefix(""), "fletapp.811c9dc5.");
-      expect(FletBackend.defaultEmbeddedStoragePrefix("a"), "fletapp.e40c292c.");
+      expect(
+          FletBackend.defaultEmbeddedStoragePrefix("a"), "fletapp.e40c292c.");
       expect(FletBackend.defaultEmbeddedStoragePrefix("foobar"),
           "fletapp.bf9cf968.");
     });
@@ -115,8 +117,8 @@ void main() {
 
     test("a set past it fails and stores nothing", () async {
       // "app.1.todo" + "\"guest one\"" already takes 21 bytes.
-      await expectLater(set("app.1.", "big", "x" * 100, 100),
-          throwsA(isA<StateError>()));
+      await expectLater(
+          set("app.1.", "big", "x" * 100, 100), throwsA(isA<StateError>()));
       expect(prefs.containsKey("app.1.big"), isFalse);
       await set("app.1.", "small", "x" * 50, 100);
       expect(prefs.getString("app.1.small"), "x" * 50);
@@ -131,6 +133,66 @@ void main() {
     test("other prefixes' keys don't count", () async {
       await set("app.12.", "note", "x" * 50, 100);
     });
+
+    test("nested clients respect outer limits", () async {
+      FletBackend app(String prefix, int quota, [FletBackend? parent]) =>
+          FletBackend(
+              pageUri: Uri.parse("mock"),
+              assetsDir: "",
+              multiView: false,
+              extensions: [],
+              parentFletBackend: parent,
+              storagePrefix: prefix,
+              fileStorageQuota: quota,
+              sharedPreferencesQuota: quota);
+      final root = app("app.1.", 50);
+      final shared = app("", 100, root);
+      final child = app("child.", 100, shared);
+      expect(shared.fileStorageQuota, 50);
+      expect(shared.sharedPreferencesQuota, 50);
+      expect(child.fileStorageQuota, 100);
+      expect(child.ancestorPreferenceQuotas, {"app.1.": 50});
+      await expectLater(
+          invokeSharedPreferencesMethod(prefs, child.storagePrefix, "set",
+              {"key": "data", "value": "x" * 30},
+              quota: child.sharedPreferencesQuota,
+              ancestorQuotas: child.ancestorPreferenceQuotas),
+          throwsStateError);
+    });
+
+    test("checks persisted values even with a stale tab cache", () async {
+      final oldCache = prefs;
+      SharedPreferences.setMockInitialValues({"app.1.external": "x" * 80});
+      expect(oldCache.containsKey("app.1.external"), isFalse);
+      await expectLater(
+          invokeSharedPreferencesMethod(
+              oldCache, "app.1.", "set", {"key": "new", "value": "x" * 20},
+              quota: 100),
+          throwsStateError);
+    }, skip: !kIsWeb);
+
+    test("concurrent clients share a single preference quota", () async {
+      SharedPreferences.setMockInitialValues({});
+      final first = await SharedPreferences.getInstance();
+      SharedPreferences.setMockInitialValues({});
+      final second = await SharedPreferences.getInstance();
+      Future<bool> write(SharedPreferences cache, String key) async {
+        try {
+          await invokeSharedPreferencesMethod(
+              cache, "app.", "set", {"key": key, "value": "x" * 55},
+              quota: 100);
+          return true;
+        } on StateError {
+          return false;
+        }
+      }
+
+      final results =
+          await Future.wait([write(first, "a"), write(second, "b")]);
+      expect(results.where((ok) => ok), hasLength(1));
+      await first.reload();
+      expect(first.getKeys(), hasLength(1));
+    }, skip: !kIsWeb);
 
     test("no quota, no limit", () async {
       await invokeSharedPreferencesMethod(

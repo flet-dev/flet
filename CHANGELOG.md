@@ -2,7 +2,7 @@
 
 ### New features
 
-* Add `FileStorage`, a service for files an app keeps between runs: `read()`, `write()` (atomic), `delete()`, `exists()`, `list()`, `size()`, and `lock()`/`unlock()` so two copies of an app (on web, two tabs) don't write a file at once. On web the files live in the browser's origin private file system (OPFS), the only persistent place a web app's Python has; writing needs Chrome 86+, Firefox 111+ or Safari 26+. On desktop and mobile they live in a folder under the app support directory, so the same code runs everywhere. An app embedded with `FletApp` gets its own folder, named from its `storage_prefix`, and can't reach its host's files or another embedded app's ([#7138](https://github.com/flet-dev/flet/pull/7138)) by @FeodorFitsner.
+* Add `FileStorage` for persistent files with atomic writes and named locks. Files live in the browser's OPFS on web and under the app support directory on desktop and mobile. Locks coordinate tabs on web and callers within a single client process elsewhere. Embedded apps use their configured storage prefix ([#7138](https://github.com/flet-dev/flet/pull/7138)) by @FeodorFitsner.
 * Add `FletApp.file_storage_quota` and `FletApp.shared_preferences_quota`: the most bytes an embedded app may keep in `FileStorage` (default 50 MB) and in `SharedPreferences` (default 1 MB). On web the host and its embedded apps share one `localStorage`, about 5 MB, so the default keeps an embedded app from filling it. Top-level apps have no limit ([#7138](https://github.com/flet-dev/flet/pull/7138)) by @FeodorFitsner.
 
 ## 1.1.4

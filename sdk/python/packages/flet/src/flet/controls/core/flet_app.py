@@ -137,8 +137,8 @@ class FletApp(LayoutControl):
 
     storage_prefix: Optional[str] = None
     """
-    Prefix put in front of every key the embedded app stores with
-    [`SharedPreferences`][flet.SharedPreferences].
+    Prefix for the embedded app's [`SharedPreferences`][flet.SharedPreferences]
+    keys and [`FileStorage`][flet.FileStorage] folder.
 
     The embedded app runs in the host's process (on web, the host's browser
     origin), so without a prefix the two would share one store, and see and
@@ -154,7 +154,7 @@ class FletApp(LayoutControl):
       but its saved data should stay, or to give each embedded app a
       readable namespace. End it with a separator so `"app.1."` and
       `"app.12."` don't overlap.
-    - `""`: share the host's keys. Only for an embedded app you trust as
+    - `""`: share the host's keys and files. Only for an embedded app you trust as
       much as the host.
 
     The prefix nests under the host's own: if the host app itself runs under
@@ -168,7 +168,8 @@ class FletApp(LayoutControl):
     [`FileStorage`][flet.FileStorage]: a write that would go past it fails.
 
     `None` (default) allows 50 MB. The limit covers only the embedded app's
-    own folder; the host's files don't count.
+    own folder. An app sharing its host's folder also inherits the host's
+    limit when it is lower.
     """
 
     shared_preferences_quota: Optional[int] = None
@@ -180,7 +181,8 @@ class FletApp(LayoutControl):
     `None` (default) allows 1 MB. On web the host and every embedded app share
     the browser's `localStorage` for the page's origin, about 5 MB in all, so
     this keeps an embedded app from filling it and breaking the host's own
-    writes.
+    writes. Keys under a nested prefix also count toward each enclosing
+    host quota.
     """
 
     reconnect_interval_ms: Optional[int] = None

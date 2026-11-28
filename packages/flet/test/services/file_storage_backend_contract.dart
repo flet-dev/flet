@@ -37,6 +37,29 @@ void fileStorageBackendContract(FileStorageBackend Function() create) {
     await b.delete(at("empty"));
   });
 
+  test("clients sharing a folder serialize quota checks and writes", () async {
+    final prefix = root.last;
+    final a = FileStorageSpace(create(), prefix, quota: 10);
+    final b = FileStorageSpace(create(), prefix, quota: 10);
+    Future<bool> write(FileStorageSpace space, String name) async {
+      try {
+        await space.invoke("write", {"name": name, "data": Uint8List(6)});
+        return true;
+      } on FileStorageQuotaError {
+        return false;
+      }
+    }
+
+    try {
+      final results = await Future.wait([write(a, "a"), write(b, "b")]);
+      expect(results.where((ok) => ok), hasLength(1));
+      expect(await a.invoke("size", {}), 6);
+    } finally {
+      await a.invoke("delete", {"name": "a"});
+      await a.invoke("delete", {"name": "b"});
+    }
+  });
+
   test("a lock is exclusive until unlocked", () async {
     final name = "${root.join("/")}/lock";
     expect(await b.lock(name, const Duration(milliseconds: 200)), isTrue);

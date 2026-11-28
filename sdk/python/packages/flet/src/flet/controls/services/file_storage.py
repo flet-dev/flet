@@ -33,17 +33,17 @@ class FileStorage(Service):
     or the new ones, never a mix.
 
     Note:
-        An app embedded in another with [`FletApp`][flet.FletApp] gets its own
-        folder, named from its
-        [`FletApp.storage_prefix`][flet.FletApp.storage_prefix], and can't read,
-        list or change its host's files or another embedded app's. It can keep
+        An embedded app gets a folder derived from its
+        [`FletApp.storage_prefix`][flet.FletApp.storage_prefix]. Apps with
+        the same effective prefix share files and named locks. It can keep
         up to [`FletApp.file_storage_quota`][flet.FletApp.file_storage_quota]
         bytes (50 MB unless the host sets another limit). A top-level app has
         no limit beyond the platform's own.
 
     Note:
-        On web, writing needs `FileSystemWritableFileStream`: Chrome 86+,
-        Firefox 111+ or Safari 26+. Older browsers raise an error.
+        On web, writing needs writable OPFS files and file moves. Supported
+        browsers include desktop Chrome 102+, Chrome for Android 109+,
+        Firefox 111+ and Safari 26+.
     """
 
     async def read(self, name: str) -> Optional[bytes]:
@@ -119,8 +119,9 @@ class FileStorage(Service):
 
     async def lock(self, name: str, timeout: float = 5.0) -> bool:
         """
-        Takes an exclusive lock, so two copies of the app don't write the same
-        file at once - on web, the app open in two tabs.
+        Takes an advisory lock. On web it coordinates tabs on the same origin.
+        On desktop and mobile it coordinates callers in the same Flet client
+        process. Separate desktop processes need their own coordination.
 
         Locks are named like files and belong to the app; they don't stop
         anything by themselves, so take the lock before reading a file you'll
