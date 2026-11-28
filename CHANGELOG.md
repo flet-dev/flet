@@ -5,11 +5,11 @@
 * flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
 * Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 * Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working ([#7123](https://github.com/flet-dev/flet/pull/7123)) by @ndonkoHenri.
-* Add `TextField.clear()` and `CupertinoTextField.clear()` to empty a field, including in a declarative app, where a field whose `value` is not bound to state can't be changed otherwise ([#5979](https://github.com/flet-dev/flet/issues/5979)) by @ndonkoHenri.
+* Add `TextField.clear()` and `CupertinoTextField.clear()` to empty a field, including in a declarative app, where a field whose `value` is not bound to state can't be changed otherwise ([#5979](https://github.com/flet-dev/flet/issues/5979), [#7149](https://github.com/flet-dev/flet/pull/7149)) by @ndonkoHenri.
 
 ### Improvements
 
-* The error raised when code changes a control returned by a component names the control and the property, such as "TextField control is frozen and its `value` cannot be changed", and says to change the component's state instead by @ndonkoHenri.
+* The error raised when code changes a control returned by a component names the control and the property, such as "TextField control is frozen and its `value` cannot be changed", and says to change the component's state instead ([#7149](https://github.com/flet-dev/flet/pull/7149)) by @ndonkoHenri.
 * A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 * flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
   * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
