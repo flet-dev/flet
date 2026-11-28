@@ -38,6 +38,7 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet.controls.keys import Key
+from flet.controls.value_types import frozen_error
 
 logger = logging.getLogger("flet_object_patch")
 logger.setLevel(logging.INFO)
@@ -180,7 +181,7 @@ def _control_setattr(obj: Any, name: str, value: Any) -> None:
             pass
         else:
             if hasattr(obj, "_frozen"):
-                raise RuntimeError("Frozen controls cannot be updated.") from None
+                raise frozen_error(obj, name) from None
             # Track changes for plain-dataclass scalar fields.
             changes = getattr(obj, "__changes", None)
             if changes is not None:

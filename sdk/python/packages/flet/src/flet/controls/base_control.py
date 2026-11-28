@@ -9,7 +9,13 @@ from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.id_counter import ControlId
 from flet.controls.ref import Ref
-from flet.controls.value_types import Prop, Value, _install_props, value
+from flet.controls.value_types import (
+    Prop,
+    Value,
+    _install_props,
+    frozen_error,
+    value,
+)
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count, is_coroutine_result
 from flet.utils.validation import validate
@@ -437,7 +443,7 @@ class BaseControl:
         attached to a page and not marked as frozen.
         """
         if hasattr(self, "_frozen"):
-            raise RuntimeError("Frozen control cannot be updated.")
+            raise frozen_error(self)
         if not self.page:
             raise RuntimeError(
                 f"{self.__class__.__qualname__} Control must be added to the page first"

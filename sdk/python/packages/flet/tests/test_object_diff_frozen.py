@@ -564,7 +564,9 @@ def test_both_frozen_hosted_by_in_place():
         ],
     )
     assert hasattr(ch, "_frozen")
-    with pytest.raises(Exception, match="Frozen controls cannot be updated."):
+    with pytest.raises(
+        Exception, match="LineChart control is frozen and its `width` cannot be changed"
+    ):
         ch.width = 100
 
 

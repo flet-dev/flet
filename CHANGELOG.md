@@ -5,9 +5,11 @@
 * flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
 * Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 * Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working ([#7123](https://github.com/flet-dev/flet/pull/7123)) by @ndonkoHenri.
+* Add `TextField.clear()` and `CupertinoTextField.clear()` to empty a field, including in a declarative app, where a field whose `value` is not bound to state can't be changed otherwise ([#5979](https://github.com/flet-dev/flet/issues/5979)) by @ndonkoHenri.
 
 ### Improvements
 
+* The error raised when code changes a control returned by a component names the control and the property, such as "TextField control is frozen and its `value` cannot be changed", and says to change the component's state instead by @ndonkoHenri.
 * A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 * flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
   * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
@@ -145,8 +147,6 @@
 * `flet build`: add `[tool.flet.android]` settings for the app's [Java compile options](/docs/publish/android#java-compile-options) (`compile_options`), [Gradle dependencies](/docs/publish/android#gradle-dependencies) (`gradle_dependencies`), and manifest [receivers](/docs/publish/android#receivers) (`receiver`) and [services](/docs/publish/android#services) (`service`) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
 * flet-audio: Add `Audio.context` (`AudioContext`, `AudioFocus`) to configure mobile audio focus and silent mode ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @BartoszKog and @ndonkoHenri.
-
-* Add `TextField.clear()` and `CupertinoTextField.clear()` to empty a field, including in a component where the field's `value` is not bound to state ([#5979](https://github.com/flet-dev/flet/issues/5979)) by @ndonkoHenri.
 
 ### Improvements
 

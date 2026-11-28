@@ -26,6 +26,29 @@ _UNSET = object()
 """Sentinel for "field not yet in _values" (distinct from None)."""
 
 
+def frozen_error(obj: Any, prop: Optional[str] = None) -> RuntimeError:
+    """
+    Builds the error raised when a frozen control or value is changed.
+
+    Args:
+        obj: The frozen object.
+        prop: The property being set, or `None` for an update of the whole
+            object.
+    """
+    name = type(obj).__qualname__
+    # `BaseControl` imports this module, so it is matched by name.
+    if any(
+        c.__name__ == "BaseControl" and c.__module__ == "flet.controls.base_control"
+        for c in type(obj).__mro__
+    ):
+        name += " control"
+    change = f"its `{prop}` cannot be changed" if prop else "cannot be updated"
+    return RuntimeError(
+        f"{name} is frozen and {change}. Controls returned by a component are "
+        "read-only: change the component's state instead."
+    )
+
+
 class Prop:
     """
     Descriptor for sparse property tracking on `BaseControl` and `Value`
@@ -63,7 +86,7 @@ class Prop:
             return  # no change — skip everything
         # Frozen controls must not be mutated after construction.
         if hasattr(obj, "_frozen"):
-            raise RuntimeError("Frozen controls cannot be updated.") from None
+            raise frozen_error(obj, self.name) from None
         if value == self.default:
             vals.pop(self.name, None)  # restore sparseness when back to default
         else:
